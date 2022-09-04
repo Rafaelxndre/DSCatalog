@@ -5,7 +5,7 @@ import jwtDecode from 'jwt-decode';
 
 type Role = 'ROLE_OPERATOR' | 'ROLE_ADMIN';
 
-type TokenData = {
+export type TokenData = {
     exp: number;
     user_name: string;
     authorities: Role[];
@@ -68,6 +68,10 @@ export const getAuthData = () => {
     return JSON.parse(str) as LoginResponse;
 };
 
+export const removeAuthData = () => {
+    localStorage.removeItem(tokenKey);
+}
+
 // Add a request interceptor
 axios.interceptors.request.use(function (config) {
     // teste - console.log('INTERCEPTOR ANTES DA REQUISÇÃO');
@@ -105,7 +109,7 @@ export const getTokenData = (): TokenData | undefined => {
     }
 }
 
-export const isAuthenticated = () : boolean => {
+export const isAuthenticated = (): boolean => {
     const tokenData = getTokenData();
 
     return (tokenData && tokenData.exp * 1000 > Date.now()) ? true : false;
